@@ -1,0 +1,44 @@
+{
+    "name": "mstilkerich/davshell",
+    "description": "Simple Shell to interact with (Card)DAV servers",
+    "type": "project",
+	"keywords": ["shell","carddav","contacts","owncloud","davical","nextcloud"],
+	"homepage": "https://github.com/mstilkerich/davshell",
+	"license": "GPL-2.0-or-later",
+	"authors": [
+		{
+			"name": "Michael Stilkerich",
+			"email": "michael@stilkerich.eu",
+			"homepage": "https://github.com/mstilkerich",
+			"role": "Developer"
+		}
+	],
+	"support": {
+		"email": "ms+davshell@mike2k.de",
+		"issues": "https://github.com/mstilkerich/davshell/issues",
+		"source": "https://github.com/mstilkerich/davshell",
+		"docs": "https://github.com/mstilkerich/davshell"
+	},
+    "require": {
+        "php": ">=7.1.0",
+        "mstilkerich/carddavclient": "dev-master",
+        "psr/log": "^1.1",
+        "bramus/monolog-colored-line-formatter": "~3.0",
+        "monolog/monolog": "^2.1",
+        "sabre/vobject": "^4.3"
+    },
+	"autoload": {
+		"psr-4": {
+			"MStilkerich\\CardDavClient\\Shell\\": "src/"
+		}
+	},
+    "require-dev": {
+        "vimeo/psalm": "^3.11"
+    },
+	"repositories": [
+		{
+			"type": "vcs",
+			"url": "file:///home/mikey/projects/carddavclient"
+		}
+	]
+}
