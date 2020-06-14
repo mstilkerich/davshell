@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "967a2b2aad1bc4d8e849f62cb9d30834",
+    "content-hash": "683776ae8c380fe0956f0f3da2a075b0",
     "packages": [
         {
             "name": "bramus/ansi-php",
@@ -373,13 +373,17 @@
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "/home/mikey/projects/carddavclient",
-                "reference": "cff948790a5c0f3531cacf49ec877757f6228e9c"
+                "url": "https://github.com/mstilkerich/carddavclient.git",
+                "reference": "a2d1a3af25089125e14f35b866005121cc44de54"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mstilkerich/carddavclient/zipball/a2d1a3af25089125e14f35b866005121cc44de54",
+                "reference": "a2d1a3af25089125e14f35b866005121cc44de54",
+                "shasum": ""
             },
             "require": {
-                "bramus/monolog-colored-line-formatter": "~3.0",
                 "guzzlehttp/guzzle": "~6.0",
-                "monolog/monolog": "^2.1",
                 "php": ">=7.1.0",
                 "psr/http-client": "^1.0",
                 "psr/http-message": "^1.0",
@@ -397,13 +401,14 @@
                     "MStilkerich\\CardDavClient\\": "src/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "GPL-2.0-or-later"
+                "GPL-3.0-or-later"
             ],
             "authors": [
                 {
                     "name": "Michael Stilkerich",
-                    "email": "michael@stilkerich.eu",
+                    "email": "ms@mike2k.de",
                     "homepage": "https://github.com/mstilkerich",
                     "role": "Developer"
                 }
@@ -411,20 +416,13 @@
             "description": "CardDAV client library to discover and synchronize with CardDAV servers",
             "homepage": "https://github.com/mstilkerich/carddavclient",
             "keywords": [
+                "CardDAV",
                 "addressbook",
-                "carddav",
                 "contacts",
-                "davical",
                 "nextcloud",
                 "owncloud"
             ],
-            "support": {
-                "email": "ms+carddavclient@mike2k.de",
-                "issues": "https://github.com/mstilkerich/carddavclient/issues",
-                "source": "https://github.com/mstilkerich/carddavclient",
-                "docs": "https://github.com/mstilkerich/carddavclient"
-            },
-            "time": "2020-06-01T16:07:27+00:00"
+            "time": "2020-06-14T15:38:38+00:00"
         },
         {
             "name": "psr/http-client",
@@ -1250,16 +1248,16 @@
         },
         {
             "name": "composer/xdebug-handler",
-            "version": "1.4.1",
+            "version": "1.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/xdebug-handler.git",
-                "reference": "1ab9842d69e64fb3a01be6b656501032d1b78cb7"
+                "reference": "fa2aaf99e2087f013a14f7432c1cd2dd7d8f1f51"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/xdebug-handler/zipball/1ab9842d69e64fb3a01be6b656501032d1b78cb7",
-                "reference": "1ab9842d69e64fb3a01be6b656501032d1b78cb7",
+                "url": "https://api.github.com/repos/composer/xdebug-handler/zipball/fa2aaf99e2087f013a14f7432c1cd2dd7d8f1f51",
+                "reference": "fa2aaf99e2087f013a14f7432c1cd2dd7d8f1f51",
                 "shasum": ""
             },
             "require": {
@@ -1294,9 +1292,17 @@
                 {
                     "url": "https://packagist.com",
                     "type": "custom"
+                },
+                {
+                    "url": "https://github.com/composer",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/composer/composer",
+                    "type": "tidelift"
                 }
             ],
-            "time": "2020-03-01T12:26:26+00:00"
+            "time": "2020-06-04T11:16:35+00:00"
         },
         {
             "name": "felixfbecker/advanced-json-rpc",
@@ -1434,16 +1440,16 @@
         },
         {
             "name": "nikic/php-parser",
-            "version": "v4.4.0",
+            "version": "v4.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "bd43ec7152eaaab3bd8c6d0aa95ceeb1df8ee120"
+                "reference": "53c2753d756f5adb586dca79c2ec0e2654dd9463"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/bd43ec7152eaaab3bd8c6d0aa95ceeb1df8ee120",
-                "reference": "bd43ec7152eaaab3bd8c6d0aa95ceeb1df8ee120",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/53c2753d756f5adb586dca79c2ec0e2654dd9463",
+                "reference": "53c2753d756f5adb586dca79c2ec0e2654dd9463",
                 "shasum": ""
             },
             "require": {
@@ -1482,7 +1488,7 @@
                 "parser",
                 "php"
             ],
-            "time": "2020-04-10T16:34:50+00:00"
+            "time": "2020-06-03T07:24:19+00:00"
         },
         {
             "name": "ocramius/package-versions",
@@ -1838,16 +1844,16 @@
         },
         {
             "name": "symfony/console",
-            "version": "v5.1.0",
+            "version": "v5.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "00bed125812716d09b163f0727ef33bb49bf3448"
+                "reference": "0f0a271bc9b7d02a053d36fcdcb12662e2a8096e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/00bed125812716d09b163f0727ef33bb49bf3448",
-                "reference": "00bed125812716d09b163f0727ef33bb49bf3448",
+                "url": "https://api.github.com/repos/symfony/console/zipball/0f0a271bc9b7d02a053d36fcdcb12662e2a8096e",
+                "reference": "0f0a271bc9b7d02a053d36fcdcb12662e2a8096e",
                 "shasum": ""
             },
             "require": {
@@ -1927,7 +1933,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-05-30T20:35:19+00:00"
+            "time": "2020-06-07T19:47:44+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -2374,16 +2380,16 @@
         },
         {
             "name": "symfony/string",
-            "version": "v5.1.0",
+            "version": "v5.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/string.git",
-                "reference": "90c2a5103f07feb19069379f3abdcdbacc7753a9"
+                "reference": "ac70459db781108db7c6d8981dd31ce0e29e3298"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/string/zipball/90c2a5103f07feb19069379f3abdcdbacc7753a9",
-                "reference": "90c2a5103f07feb19069379f3abdcdbacc7753a9",
+                "url": "https://api.github.com/repos/symfony/string/zipball/ac70459db781108db7c6d8981dd31ce0e29e3298",
+                "reference": "ac70459db781108db7c6d8981dd31ce0e29e3298",
                 "shasum": ""
             },
             "require": {
@@ -2455,7 +2461,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-05-20T17:43:50+00:00"
+            "time": "2020-06-11T12:16:36+00:00"
         },
         {
             "name": "vimeo/psalm",
