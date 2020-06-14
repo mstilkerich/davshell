@@ -61,6 +61,10 @@ class ShellSyncHandlerCollectChanges implements SyncHandler
     {
         return $this->deletedCards;
     }
+
+    public function finalizeSync(): void
+    {
+    }
 }
 
 // vim: ts=4:sw=4:expandtab:fenc=utf8:ff=unix:tw=120

@@ -374,7 +374,7 @@
             "source": {
                 "type": "git",
                 "url": "/home/mikey/projects/carddavclient",
-                "reference": "bc07a79616c84d2e86e215266954ac642c91720f"
+                "reference": "cff948790a5c0f3531cacf49ec877757f6228e9c"
             },
             "require": {
                 "bramus/monolog-colored-line-formatter": "~3.0",
@@ -424,7 +424,7 @@
                 "source": "https://github.com/mstilkerich/carddavclient",
                 "docs": "https://github.com/mstilkerich/carddavclient"
             },
-            "time": "2020-05-31T12:49:45+00:00"
+            "time": "2020-06-01T16:07:27+00:00"
         },
         {
             "name": "psr/http-client",
