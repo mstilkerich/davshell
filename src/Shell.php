@@ -321,6 +321,8 @@ class Shell
                 self::$logger->info("Deleted object: $cardUri");
             }
 
+            self::$logger->info("New sync token: $synctoken");
+
             $ret = true;
         }
 
