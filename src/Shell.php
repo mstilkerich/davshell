@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace MStilkerich\CardDavClient\Shell;
 
-use MStilkerich\CardDavClient\{Account, AddressbookCollection, Config};
+use MStilkerich\CardDavClient\{Account, AddressbookCollection, Config, WebDavCollection};
 use MStilkerich\CardDavClient\Services\{Discovery, Sync};
 use Psr\Log\LoggerInterface;
 use Monolog\Logger;
@@ -81,11 +81,29 @@ class Shell
             'synopsis' => 'Lists the available addressbooks',
             'usage'    => 'Usage: accounts [<accountname>]',
             'help'     => "Lists the available addressbooks for the specified account.\n"
-                . "If no account is specified, lists the addressbooks for all accounts. The list includes an"
-                . "identifier for each addressbooks to be used within this shell to reference this addressbook in"
+                . "If no account is specified, lists the addressbooks for all accounts. The list includes an\n"
+                . "identifier for each addressbooks to be used within this shell to reference this addressbook in\n"
                 . "operations",
             'callback' => 'listAddressbooks',
             'minargs'  => 0,
+        ],
+        'cd' => [
+            'synopsis' => 'Change the current working collection',
+            'usage'    => 'Usage: cd [<URI>]',
+            'help'     => "Changes the currently selected working collection, which is used by some commands if no\n"
+                . "collection is specified. If no URI is given, changes to the working addressbook's collection.\n"
+                . "URI: An URI, absolute or relative to the current working collection.",
+            'callback' => 'changeCollection',
+            'minargs'  => 0,
+        ],
+        'chabook' => [
+            'synopsis' => 'Change the currently selected working addressbook',
+            'usage'    => 'Usage: chabook <addressbook_id>',
+            'help'     => "Changes the currently selected working addressbook, which is used by some commands if no\n"
+                . "addressbook is specified.\n"
+                . "addressbook_id: Identifier of the addressbook as provided by the \"addressbooks\" command.",
+            'callback' => 'changeAddressbook',
+            'minargs'  => 1,
         ],
         'show_addressbook' => [
             'synopsis' => 'Shows detailed information on the given addressbook.',
@@ -131,6 +149,12 @@ class Shell
 
     /** @var array Configuration of the shell */
     private $config;
+
+    /** @var ?string Name of the currently selected addressbook */
+    private $curABookId;
+
+    /** @var ?WebDavCollection Currently selected collection accessed via selected addressbook */
+    private $curColl;
 
     /** @var LoggerInterface */
     public static $logger;
@@ -231,6 +255,55 @@ class Shell
         }
 
         return $ret;
+    }
+
+    private function changeCollection(string $uri = null): bool
+    {
+        if (empty($uri)) {
+            $abook = isset($this->curABookId) ? $this->getAddressbookFromId($this->curABookId) : null;
+            if (isset($abook)) {
+                $uri = $abook->getUriPath();
+            } else {
+                self::$logger->error("No current addressbook selected - use chabook first.");
+                return false;
+            }
+        }
+
+        if (isset($this->curColl)) {
+            $target = \Sabre\Uri\resolve($this->curColl->getUri(), $uri);
+            if ($target[-1] != '/') {
+                $target = "$target/";
+            }
+
+            try {
+                $coll = WebDavCollection::createSpecificCollection($target, $this->curColl->getAccount());
+                $this->curColl = $coll;
+                return true;
+            } catch (\Exception $e) {
+                self::$logger->error("cd: " . $e->getMessage());
+                return false;
+            }
+        } else {
+            self::$logger->error("No current addressbook selected - use chabook first.");
+        }
+
+        return false;
+    }
+
+    private function changeAddressbook(string $abookId): bool
+    {
+        $retval = false;
+
+        $abook = $this->getAddressbookFromId($abookId);
+        if (isset($abook)) {
+            $this->curABookId = $abookId;
+            $this->curColl = $abook;
+            $this->changeCollection();
+        } else {
+            self::$logger->error("Unknown addressbook $abookId");
+        }
+
+        return $retval;
     }
 
     private function discoverAddressbooks(string $accountName): bool
@@ -481,11 +554,30 @@ class Shell
         return $ret;
     }
 
+    private function prompt(): string
+    {
+        $ret = "";
+
+        if (isset($this->curABookId)) {
+            $ret .= $this->curABookId . ':';
+        }
+
+        $coll = $this->curColl;
+        if (isset($coll)) {
+            $ret .= $coll->getUriPath();
+            $ret .= ($coll instanceof AddressbookCollection) ? " [A]" : " [C]";
+        }
+
+        $ret .= "> ";
+
+        return $ret;
+    }
+
     public function run(): void
     {
         readline_read_history(self::HISTFILE);
 
-        while ($cmd = readline("> ")) {
+        while ($cmd = readline($this->prompt())) {
             $cmd = trim($cmd);
             $tokens = preg_split("/\s+/", $cmd);
 
