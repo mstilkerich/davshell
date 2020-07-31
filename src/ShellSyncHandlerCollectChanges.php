@@ -42,8 +42,13 @@ class ShellSyncHandlerCollectChanges implements SyncHandler
     /** @var array */
     private $deletedCards = [];
 
-    public function addressObjectChanged(string $uri, string $etag, VCard $card): void
+    public function addressObjectChanged(string $uri, string $etag, ?VCard $card): void
     {
+        if (!isset($card)) {
+            Shell::$logger->error("Card $uri could not be retrieved / parsed");
+            return;
+        }
+
         $uid = (string) $card->UID;
         Shell::$logger->debug("Existing object: $uri ($uid)");
         $this->changedCards[$uid] = [

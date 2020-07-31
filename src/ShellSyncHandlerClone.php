@@ -56,8 +56,13 @@ class ShellSyncHandlerClone implements SyncHandler
         $this->newOnly = $newOnly;
     }
 
-    public function addressObjectChanged(string $uri, string $etag, VCard $card): void
+    public function addressObjectChanged(string $uri, string $etag, ?VCard $card): void
     {
+        if (!isset($card)) {
+            Shell::$logger->error("Card $uri could not be retrieved / parsed");
+            return;
+        }
+
         $uid = (string) $card->UID;
 
         $existingCard = $this->destState->getCardByUID($uid);

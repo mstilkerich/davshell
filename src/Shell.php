@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace MStilkerich\CardDavClient\Shell;
 
-use MStilkerich\CardDavClient\{Account, AddressbookCollection, Config, WebDavCollection};
+use MStilkerich\CardDavClient\{Account, AddressbookCollection, Config, WebDavCollection, WebDavResource};
 use MStilkerich\CardDavClient\Services\{Discovery, Sync};
 use Psr\Log\LoggerInterface;
 use Monolog\Logger;
@@ -95,6 +95,23 @@ class Shell
                 . "URI: An URI, absolute or relative to the current working collection.",
             'callback' => 'changeCollection',
             'minargs'  => 0,
+        ],
+        'ls' => [
+            'synopsis' => 'List contents of a collection',
+            'usage'    => 'Usage: ls [<URI>]',
+            'help'     => "Lists the children of the given collection. If no collection is specified, lists the\n"
+                . "children of the current working collection.\n"
+                . "URI: An URI, absolute or relative to the current working collection.",
+            'callback' => 'listChildren',
+            'minargs'  => 0,
+        ],
+        'cat' => [
+            'synopsis' => 'List content of a resource',
+            'usage'    => 'Usage: cat <URI>',
+            'help'     => "Lists the content of the given resource.\n"
+                . "URI: An URI, absolute or relative to the current working collection.",
+            'callback' => 'catResource',
+            'minargs'  => 1,
         ],
         'chabook' => [
             'synopsis' => 'Change the currently selected working addressbook',
@@ -276,15 +293,74 @@ class Shell
             }
 
             try {
-                $coll = WebDavCollection::createSpecificCollection($target, $this->curColl->getAccount());
-                $this->curColl = $coll;
-                return true;
+                $coll = WebDavResource::createInstance($target, $this->curColl->getAccount());
+                if ($coll instanceof WebDavCollection) {
+                    $this->curColl = $coll;
+                    return true;
+                } else {
+                    self::$logger->error("cd: not a collection");
+                    return false;
+                }
             } catch (\Exception $e) {
                 self::$logger->error("cd: " . $e->getMessage());
                 return false;
             }
         } else {
             self::$logger->error("No current addressbook selected - use chabook first.");
+        }
+
+        return false;
+    }
+
+    private function listChildren(string $uri = null): bool
+    {
+        $coll = $this->curColl;
+        if (!isset($coll)) {
+            self::$logger->error("No current working collection selected - use chabook first.");
+            return false;
+        }
+
+        if (!empty($uri)) {
+            $target = \Sabre\Uri\resolve($coll->getUri(), $uri);
+            if ($target[-1] != '/') {
+                $target = "$target/";
+            }
+
+            try {
+                $coll = WebDavResource::createInstance($target, $coll->getAccount());
+                if (!($coll instanceof WebDavCollection)) {
+                    self::$logger->error("$uri: not a collection");
+                    return false;
+                }
+            } catch (\Exception $e) {
+                self::$logger->error("ls: " . $e->getMessage());
+                return false;
+            }
+        }
+
+        $children = $coll->getChildren();
+        foreach ($children as $child) {
+            $basename = $child->getBasename();
+            self::$logger->info("$basename (" . get_class($child) . ")");
+        }
+
+        return false;
+    }
+
+    private function catResource(string $uri): bool
+    {
+        $coll = $this->curColl;
+        if (!isset($coll)) {
+            self::$logger->error("No current working collection selected - use chabook first.");
+            return false;
+        }
+
+        try {
+            [ 'body' => $content ] = $coll->downloadResource($uri);
+            self::$logger->info($content);
+            return true;
+        } catch (\Exception $e) {
+            self::$logger->error("cat $uri: " . $e->getMessage());
         }
 
         return false;
@@ -298,7 +374,7 @@ class Shell
         if (isset($abook)) {
             $this->curABookId = $abookId;
             $this->curColl = $abook;
-            $this->changeCollection();
+            $retval = $this->changeCollection();
         } else {
             self::$logger->error("Unknown addressbook $abookId");
         }
