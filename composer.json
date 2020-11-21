@@ -2,23 +2,23 @@
     "name": "mstilkerich/davshell",
     "description": "Simple Shell to interact with (Card)DAV servers",
     "type": "project",
-	"keywords": ["shell","carddav","contacts","owncloud","davical","nextcloud"],
-	"homepage": "https://github.com/mstilkerich/davshell",
-	"license": "GPL-3.0-or-later",
-	"authors": [
-		{
-			"name": "Michael Stilkerich",
-			"email": "ms@mike2k.de",
-			"homepage": "https://github.com/mstilkerich",
-			"role": "Developer"
-		}
-	],
-	"support": {
-		"email": "ms@mike2k.de",
-		"issues": "https://github.com/mstilkerich/davshell/issues",
-		"source": "https://github.com/mstilkerich/davshell",
-		"docs": "https://github.com/mstilkerich/davshell"
-	},
+    "keywords": ["shell","carddav","contacts","owncloud","davical","nextcloud"],
+    "homepage": "https://github.com/mstilkerich/davshell",
+    "license": "GPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Michael Stilkerich",
+            "email": "ms@mike2k.de",
+            "homepage": "https://github.com/mstilkerich",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "email": "ms@mike2k.de",
+        "issues": "https://github.com/mstilkerich/davshell/issues",
+        "source": "https://github.com/mstilkerich/davshell",
+        "docs": "https://github.com/mstilkerich/davshell"
+    },
     "require": {
         "php": ">=7.1.0",
         "mstilkerich/carddavclient": "dev-master",
@@ -27,16 +27,16 @@
         "monolog/monolog": "^2.1",
         "sabre/vobject": "^4.3"
     },
-	"autoload": {
-		"psr-4": {
-			"MStilkerich\\CardDavClient\\Shell\\": "src/"
-		}
-	},
-    "require-dev": {
-        "vimeo/psalm": "^3.11",
-		"phpcompatibility/php-compatibility": "*",
-		"dealerdirect/phpcodesniffer-composer-installer": "^0.6.0"
+    "autoload": {
+        "psr-4": {
+            "MStilkerich\\CardDavClient\\Shell\\": "src/"
+        }
     },
-	"bin": ["src/davshell.php"],
-	"prefer-stable" : true
+    "require-dev": {
+        "vimeo/psalm": ">= 3.11",
+        "phpcompatibility/php-compatibility": "*",
+        "dealerdirect/phpcodesniffer-composer-installer": ">= 0.7.0"
+    },
+    "bin": ["src/davshell.php"],
+    "prefer-stable" : true
 }

@@ -1,3 +1,4 @@
+DOCDIR := doc/api/
 .PHONY: all stylecheck phpcompatcheck staticanalyses psalmanalysis doc
 
 all: stylecheck staticanalysis doc
@@ -11,8 +12,8 @@ phpcompatcheck:
 	vendor/bin/phpcs --colors --standard=PHPCompatibility --runtime-set testVersion 7.1 src/
 
 psalmanalysis:
-	vendor/bin/psalm
+	vendor/bin/psalm --no-cache
 
 doc:
-	rm -r ~/www/davshell/*
-	phpDocumentor.phar -d src/ -t ~/www/davshell --title="(Card)DAV Shell" 
+	rm -rf $(DOCDIR)
+	phpDocumentor.phar -d src/ -t $(DOCDIR) --title="(Card)DAV Shell" 
