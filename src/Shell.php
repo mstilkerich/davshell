@@ -36,6 +36,8 @@ use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 use Monolog\Formatter\LineFormatter;
 use Bramus\Monolog\Formatter\ColoredLineFormatter;
+use Sabre\VObject;
+use Sabre\VObject\Component\VCard;
 
 class Shell
 {
@@ -111,6 +113,15 @@ class Shell
             'help'     => "Lists the content of the given resource.\n"
                 . "URI: An URI, absolute or relative to the current working collection.",
             'callback' => 'catResource',
+            'minargs'  => 1,
+        ],
+        'put_card' => [
+            'synopsis' => 'Create an address object from a local vcard',
+            'usage'    => 'Usage: put <filename> [<addressbook_id>]',
+            'help'     => "Creates a new resource from a local file in the given or current addressbook.\n"
+                . "filename: Absolute or relative to the current working directory."
+                . "addressbook_id: Identifier of the addressbook as provided by the \"addressbooks\" command.",
+            'callback' => 'putResource',
             'minargs'  => 1,
         ],
         'chabook' => [
@@ -361,6 +372,38 @@ class Shell
             return true;
         } catch (\Exception $e) {
             self::$logger->error("cat $uri: " . $e->getMessage());
+        }
+
+        return false;
+    }
+
+    private function putResource(string $filename, ?string $abookId = null): bool
+    {
+        $abookId = $abookId ?? $this->curABookId;
+
+        if (isset($abookId)) {
+            $abook = $this->getAddressbookFromId($abookId);
+            if (!isset($abook)) {
+                self::$logger->error("Unknown addressbook $abookId");
+                return false;
+            }
+        } else {
+            self::$logger->error("Specify addressbook or use chabook first to set a working collection.");
+            return false;
+        }
+
+        try {
+            $vcard = VObject\Reader::read(fopen($filename, 'r'));
+            if (!($vcard instanceof VCard)) {
+                self::$logger->error("Could not read VCard from $filename");
+                return false;
+            }
+
+            [ 'uri' => $uri, 'etag' => $etag ] = $abook->createCard($vcard);
+            self::$logger->info("Created card at $uri with ETag $etag");
+            return true;
+        } catch (\Exception $e) {
+            self::$logger->error("put_card $filename to $abookId: " . $e->getMessage());
         }
 
         return false;
