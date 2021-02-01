@@ -21,10 +21,6 @@
  * along with davshell.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-/**
- * Simple CardDAV Shell, mainly for debugging the library.
- */
-
 declare(strict_types=1);
 
 namespace MStilkerich\CardDavClient\Shell;
@@ -39,11 +35,46 @@ use Bramus\Monolog\Formatter\ColoredLineFormatter;
 use Sabre\VObject;
 use Sabre\VObject\Component\VCard;
 
+/**
+ * Simple CardDAV Shell, mainly for debugging the library.
+ *
+ * @psalm-type AccountName string
+ *
+ * @psalm-type ShellConfig = array{
+ *   accounts: array<AccountName, Account>,
+ *   addressbooks: array<AccountName, list<AddressbookCollection>>,
+ * }
+ *
+ * @psalm-type AccountSerialized = array{
+ *   username: string,
+ *   password: string,
+ *   discoveryUri: string,
+ *   baseUrl: string,
+ * }
+ *
+ * @psalm-type AddressbookSerialized = array{
+ *   uri: string,
+ * }
+ *
+ * @psalm-type ShellConfigSerialized = array{
+ *   accounts: array<AccountName, AccountSerialized>,
+ *   addressbooks: array<AccountName, list<AddressbookSerialized>>,
+ * }
+ *
+ * @psalm-type CommandSpec = array{
+ *   synopsis: string,
+ *   usage: string,
+ *   help: string,
+ *   callback: callable(string...):bool,
+ *   minargs: int,
+ * }
+ */
 class Shell
 {
     private const CONFFILE = ".davshellrc";
     private const HISTFILE = ".davshell_history";
 
+    /** @var array<string, CommandSpec> */
     private const COMMANDS = [
         'help' => [
             'synopsis' => 'Lists available commands or displays help on a specific command',
@@ -140,6 +171,14 @@ class Shell
             'callback' => 'showAddressbook',
             'minargs'  => 1,
         ],
+        'query' => [
+            'synopsis' => 'Queries an addressbook for cards matching criteria',
+            'usage'    => 'Usage: query <addressbook_id> <filter-condition>',
+            'help'     => "addressbook_id: Identifier of the addressbook as provided by the \"addressbooks\" command.\n"
+                . "<filter-condition>: A filter of the form [!]PROPERTY:[SEARCHPATTERN]",
+            'callback' => 'queryAddressbook',
+            'minargs'  => 2,
+        ],
         'synchronize' => [
             'synopsis' => 'Synchronizes an addressbook to the local cache.',
             'usage'    => 'Usage: synchronize <addressbook_id> [<sync-token>]',
@@ -175,7 +214,7 @@ class Shell
         ],
     ];
 
-    /** @var array Configuration of the shell */
+    /** @var ShellConfig Configuration of the shell */
     private $config;
 
     /** @var ?string Name of the currently selected addressbook */
@@ -225,6 +264,7 @@ class Shell
         return true;
     }
 
+    /*
     private static function commandCompletion(string $word, int $index): array
     {
         // FIXME to be done
@@ -245,6 +285,7 @@ class Shell
 
         return $matches;
     }
+    */
 
     private function addAccount(string $name, string $srv, string $usr, string $pw): bool
     {
@@ -506,7 +547,8 @@ class Shell
             $synctoken = $syncmgr->synchronize($abook, $synchandler, [ ], $syncToken);
 
             foreach ($synchandler->getChangedCards() as $card) {
-                self::$logger->info("Changed object: " . $card["uri"] . " (" . $card["vcard"]->FN . ")");
+                $fn = $card["vcard"]->FN ?? "<no name>";
+                self::$logger->info("Changed object: {$card["uri"]} ($fn)");
             }
 
             foreach ($synchandler->getRemovedCards() as $cardUri) {
@@ -514,6 +556,30 @@ class Shell
             }
 
             self::$logger->info("New sync token: $synctoken");
+
+            $ret = true;
+        }
+
+        return $ret;
+    }
+
+    private function queryAddressbook(string $abookId, string $filter): bool
+    {
+        $ret = false;
+
+        $abook = $this->getAddressbookFromId($abookId);
+        if (isset($abook)) {
+            [ $prop, $filter ] = explode(':', $filter);
+
+            self::$logger->info("Query $prop for $filter");
+
+            $cards = $abook->query([$prop => $filter], [ 'FN' ]);
+
+            foreach ($cards as $card) {
+                $card = $card["vcard"];
+                $fn = $card->FN ?? "<no name>";
+                self::$logger->info("Found: $fn");
+            }
 
             $ret = true;
         }
@@ -568,18 +634,22 @@ class Shell
 
     private function getAddressbookFromId(string $abookId): ?AddressBookCollection
     {
+        $abook = null;
+
         if (preg_match("/^(.*)@(\d+)$/", $abookId, $matches)) {
             [, $accountName, $abookIdx] = $matches;
-            $abook = $this->config["addressbooks"][$accountName][$abookIdx] ?? null;
+            $abookIdx = intval($abookIdx);
 
-            if (!isset($abook)) {
+            if (isset($this->config["addressbooks"][$accountName][$abookIdx])) {
+                $abook = $this->config["addressbooks"][$accountName][$abookIdx];
+            } else {
                 self::$logger->error("Invalid addressbook ID $abookId");
             }
         } else {
             self::$logger->error("Invalid addressbook ID $abookId");
         }
 
-        return $abook ?? null;
+        return $abook;
     }
 
     private function timedExecution(string ...$tokens): bool
@@ -595,31 +665,28 @@ class Shell
 
     private function readConfig(): void
     {
-        $this->config = [];
+        $config = [
+            "accounts" => [],
+            "addressbooks" => []
+        ];
 
         $cfgstr = file_get_contents(self::CONFFILE);
         if ($cfgstr !== false) {
-            $this->config = json_decode($cfgstr, true);
-        }
-
-        if (empty($this->config)) {
-            $this->config = [
-                "accounts" => [],
-                "addressbooks" => []
-            ];
+            /** @var ShellConfigSerialized */
+            $config = json_decode($cfgstr, true);
         }
 
         // convert arrays back to objects
         $accounts = [];
-        foreach ($this->config["accounts"] as $name => $arr) {
+        foreach ($config["accounts"] as $name => $arr) {
             $accounts[$name] = Account::constructFromArray($arr);
         }
-        $this->config["accounts"] = $accounts;
+        $config["accounts"] = $accounts;
 
         $accAbooks = [];
-        foreach ($this->config["addressbooks"] as $name => $abooks) {
-            $account = $accounts[$name] ?? null;
-            if (isset($account)) {
+        foreach ($config["addressbooks"] as $name => $abooks) {
+            if (isset($accounts[$name])) {
+                $account = $accounts[$name];
                 $accAbooks["$name"] = [];
 
                 foreach ($abooks as $abook) {
@@ -633,7 +700,9 @@ class Shell
                 self::$logger->error("Config contains addressbooks for undefined account $name");
             }
         }
-        $this->config["addressbooks"] = $accAbooks;
+        $config["addressbooks"] = $accAbooks;
+
+        $this->config = $config;
     }
 
     private function writeConfig(): void
@@ -650,6 +719,9 @@ class Shell
         }
     }
 
+    /**
+     * @param list<string> $tokens
+     */
     private function execCommand(array $tokens): bool
     {
         $ret = false;
@@ -658,6 +730,7 @@ class Shell
         if (isset(self::COMMANDS[$command])) {
             if (count($tokens) >= self::COMMANDS[$command]['minargs']) {
                 try {
+                    /** @var bool $ret */
                     $ret = call_user_func_array([$this, self::COMMANDS[$command]['callback']], $tokens);
                 } catch (\Exception $e) {
                     self::$logger->error("Command raised Exception: " . $e);

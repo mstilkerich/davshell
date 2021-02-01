@@ -68,7 +68,7 @@ class ShellSyncHandlerClone implements SyncHandler
         $existingCard = $this->destState->getCardByUID($uid);
 
         if (isset($existingCard)) {
-            $fn = $existingCard["vcard"]->FN;
+            $fn = $existingCard["vcard"]->FN ?? "<no name>";
 
             if ($this->newOnly) {
                 Shell::$logger->debug("Skip existing card: $uid ($fn)");
@@ -78,7 +78,9 @@ class ShellSyncHandlerClone implements SyncHandler
             }
         } else {
             [ "uri" => $newuri ] = $this->destAbook->createCard($card);
-            Shell::$logger->debug("Cloned object: $uri (" . $card->FN . ") to $newuri");
+
+            $fn = $card->FN ?? "<no name>";
+            Shell::$logger->debug("Cloned object: $uri ($fn) to $newuri");
         }
     }
 
