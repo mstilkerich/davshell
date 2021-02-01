@@ -1,4 +1,6 @@
 # davshell - Simple Shell to interact with (Card)DAV servers
+![CI Build](https://github.com/mstilkerich/davshell/workflows/CI%20Build/badge.svg)
+[![Type Coverage](https://shepherd.dev/github/mstilkerich/davshell/coverage.svg)](https://shepherd.dev/github/mstilkerich/davshell)
 
 This is a simple shell program to interact with a CardDAV server. It's main purpose is to serve as a simple demo client
 for the [carddavclient library](https://github.com/mstilkerich/carddavclient) and a test utility during development of that library.
