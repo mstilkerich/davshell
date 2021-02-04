@@ -21,17 +21,36 @@
  * along with davshell.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-/**
- * Simple CardDAV Shell, mainly for debugging the library.
- */
-
 declare(strict_types=1);
 
-namespace MStilkerich\CardDavClient\Shell;
+namespace MStilkerich\CardDavClient\Shell\Command\Account;
 
-require 'vendor/autoload.php';
+use MStilkerich\CardDavClient\Shell\{Shell,Command};
 
-$shell = Shell::instance();
-$shell->run();
+/**
+ * Command that lists all configured CardDAV accounts.
+ */
+class ListAccounts extends Command
+{
+    protected $synopsis = 'Lists the available accounts';
+    protected $usage = 'Usage: acc:list';
+    protected $help = "Lists the available accounts.";
+    protected $minArgs = 0;
+    protected $maxArgs = 0;
+
+    /**
+     * @param list<string> $args Arguments for the function as command line tokens.
+     * @return bool Indicates if the command was successful
+     */
+    public function run(array $args): bool
+    {
+        $shell = Shell::instance();
+        foreach ($shell->config["accounts"] as $name => $account) {
+            Shell::$logger->info("Account $name ($account)");
+        }
+
+        return true;
+    }
+}
 
 // vim: ts=4:sw=4:expandtab:fenc=utf8:ff=unix:tw=120
