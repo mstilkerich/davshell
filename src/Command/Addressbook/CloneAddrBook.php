@@ -61,11 +61,11 @@ class CloneAddrBook extends Command
         if (isset($src) && isset($dest)) {
             $destState = new ShellSyncHandlerCollectChanges();
             $syncmgr = new Sync();
-            $destSynctoken = $syncmgr->synchronize($dest, $destState);
+            $syncmgr->synchronize($dest, $destState);
 
             $cloneMgr = new ShellSyncHandlerClone($dest, $destState, $addOnly);
             $syncmgr = new Sync();
-            $srcSyncToken = $syncmgr->synchronize($src, $cloneMgr);
+            $syncmgr->synchronize($src, $cloneMgr);
 
             $ret = true;
         }

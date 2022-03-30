@@ -54,7 +54,7 @@ class Sweep extends Command
         if (isset($abook)) {
             $synchandler = new ShellSyncHandlerCollectChanges();
             $syncmgr = new Sync();
-            $synctoken = $syncmgr->synchronize($abook, $synchandler);
+            $syncmgr->synchronize($abook, $synchandler);
 
             foreach ($synchandler->getChangedCards() as $card) {
                 $uri = $card["uri"];
