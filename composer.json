@@ -38,5 +38,10 @@
         "dealerdirect/phpcodesniffer-composer-installer": ">= 0.7.0"
     },
     "bin": ["src/davshell.php"],
-    "prefer-stable" : true
+    "prefer-stable" : true,
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    }
 }
