@@ -99,7 +99,7 @@ class Shell
     private function __construct()
     {
         $log = new Logger('davshell');
-        $handler = new StreamHandler('php://stdout', Level::Debug);
+        $handler = new StreamHandler('php://stdout', 'DEBUG');
         /** @psalm-suppress InvalidArgument See https://github.com/bramus/monolog-colored-line-formatter/pull/26 */
         $handler->setFormatter(new ColoredLineFormatter(
             null,
@@ -112,7 +112,7 @@ class Shell
         self::$logger = $log;
 
         $httplog = new Logger('davshell');
-        $httphandler = new StreamHandler('http.log', Level::Debug, true, 0600);
+        $httphandler = new StreamHandler('http.log', 'DEBUG', true, 0600);
         $httphandler->setFormatter(new LineFormatter(
             "[%datetime%] %level_name%: %message% %context% %extra%",
             'Y-m-d H:i:s', // simplified date format
