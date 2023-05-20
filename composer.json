@@ -22,9 +22,9 @@
     "require": {
         "php": ">=7.1.0",
         "mstilkerich/carddavclient": "dev-master",
-        "psr/log": "^1.1",
-        "bramus/monolog-colored-line-formatter": "~3.0",
-        "monolog/monolog": "^2.1",
+        "psr/log": "^1.0 || ^2.0 || ^3.0",
+        "bramus/monolog-colored-line-formatter": "~3",
+        "monolog/monolog": "^3",
         "sabre/vobject": "^4.3"
     },
     "autoload": {
