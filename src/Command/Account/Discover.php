@@ -50,6 +50,7 @@ class Discover extends Command
         $retval = false;
         $shell = Shell::instance();
 
+        assert(count($args) >= 1);
         [$accountName] = $args;
         $account = $shell->config["accounts"][$accountName] ?? null;
 

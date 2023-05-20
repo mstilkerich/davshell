@@ -46,6 +46,7 @@ class Query extends Command
      */
     public function run(array $args): bool
     {
+        assert(count($args) >= 2);
         [ $abookId, $filter ] = $args;
 
         $ret = false;

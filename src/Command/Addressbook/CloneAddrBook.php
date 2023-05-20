@@ -49,6 +49,7 @@ class CloneAddrBook extends Command
      */
     public function run(array $args): bool
     {
+        assert(count($args) >= 2);
         [ $srcAbookId, $targetAbookId, $opt ] = $args;
         $shell = Shell::instance();
 

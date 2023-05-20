@@ -47,7 +47,8 @@ class ListCollection extends Command
      */
     public function run(array $args): bool
     {
-        [ $uri ] = $args;
+        $uri = $args[0] ?? '';
+
         $shell = Shell::instance();
 
         $coll = $shell->curColl;

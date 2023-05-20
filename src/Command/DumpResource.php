@@ -45,6 +45,7 @@ class DumpResource extends Command
      */
     public function run(array $args): bool
     {
+        assert(count($args) >= 1);
         [ $uri ] = $args;
         $shell = Shell::instance();
 

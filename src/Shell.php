@@ -99,6 +99,7 @@ class Shell
     {
         $log = new Logger('davshell');
         $handler = new StreamHandler('php://stdout', Logger::DEBUG);
+        /** @psalm-suppress InvalidArgument See https://github.com/bramus/monolog-colored-line-formatter/pull/26 */
         $handler->setFormatter(new ColoredLineFormatter(
             null,
             "%message% %context% %extra%\n",

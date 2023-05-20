@@ -47,7 +47,7 @@ class Help extends Command
     public function run(array $args): bool
     {
         $ret = false;
-        [ $command ] = $args;
+        $command = $args[0] ?? '';
 
         if (strlen($command) > 0) {
             if (isset(self::COMMAND_MAP[$command])) {

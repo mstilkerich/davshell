@@ -46,6 +46,7 @@ class Synchronize extends Command
      */
     public function run(array $args): bool
     {
+        assert(count($args) >= 1);
         [ $abookId, $syncToken ] = $args;
         $shell = Shell::instance();
         $ret = false;

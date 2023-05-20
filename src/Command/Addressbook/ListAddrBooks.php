@@ -48,7 +48,7 @@ class ListAddrBooks extends Command
      */
     public function run(array $args): bool
     {
-        [ $accountName ] = $args;
+        $accountName = $args[0] ?? '';
         $shell = Shell::instance();
 
         $ret = false;

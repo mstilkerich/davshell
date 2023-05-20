@@ -49,6 +49,7 @@ class CreateCard extends Command
      */
     public function run(array $args): bool
     {
+        assert(count($args) >= 1);
         [ $filename, $abookId ] = $args;
         $shell = Shell::instance();
 

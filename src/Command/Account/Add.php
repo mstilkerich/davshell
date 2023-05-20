@@ -52,6 +52,7 @@ class Add extends Command
         $ret = false;
         $shell = Shell::instance();
 
+        assert(count($args) >= 4);
         [ $name, $srv, $usr, $pw ] = $args;
 
         if (isset($shell->config["accounts"][$name])) {

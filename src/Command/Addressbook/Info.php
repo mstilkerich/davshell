@@ -46,7 +46,7 @@ class Info extends Command
     public function run(array $args): bool
     {
         $ret = false;
-        [ $abookId ] = $args;
+        $abookId = $args[0] ?? '';
         $shell = Shell::instance();
 
         if (strlen($abookId) == 0) {
