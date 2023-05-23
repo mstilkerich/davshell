@@ -33,7 +33,7 @@
         }
     },
     "require-dev": {
-        "vimeo/psalm": "~5.11.0",
+        "vimeo/psalm": "~5.12.0",
         "phpcompatibility/php-compatibility": "*",
         "dealerdirect/phpcodesniffer-composer-installer": ">= 0.7.0"
     },
