@@ -101,22 +101,40 @@ abstract class Command
         if (isset(self::COMMAND_MAP[$command])) {
             $cmdClass = self::COMMAND_MAP[$command];
             $cmd = new $cmdClass();
-            $nargs = count($tokens);
-            if ($cmd->minArgs <= $nargs && ($cmd->maxArgs < 0 /* no limit */ || $nargs <= $cmd->maxArgs)) {
-                if ($cmd->maxArgs > 0 && $nargs < $cmd->maxArgs) {
-                    $tokens = array_merge($tokens, array_fill(0, $cmd->maxArgs - $nargs, ""));
-                }
-                try {
-                    $ret = $cmd->run($tokens);
-                } catch (\Exception $e) {
-                    Shell::$logger->error("Command raised Exception: " . $e);
-                }
-            } else {
-                Shell::$logger->error("Wrong number of arguments to $command.");
-                Shell::$logger->info($cmd->usage());
-            }
+            $ret = $cmd->checkArgsAndRun($command, $tokens);
         } else {
             Shell::$logger->error("Unknown command $command. Type \"help\" for a list of available commands");
+        }
+
+        return $ret;
+    }
+
+    /**
+     * Checks the number of arguments against the limits of the command, and runs the command if valid.
+     *
+     * Optional arguments not provided by the user are filled with empty strings.
+     *
+     * @param string $command The name of the command, as typed by the user.
+     * @param list<string> $args Arguments for the function as command line tokens.
+     * @return bool Indicates if the command was successful
+     */
+    final protected function checkArgsAndRun(string $command, array $args): bool
+    {
+        $ret = false;
+        $nargs = count($args);
+
+        if ($this->minArgs <= $nargs && ($this->maxArgs < 0 /* no limit */ || $nargs <= $this->maxArgs)) {
+            if ($this->maxArgs > 0 && $nargs < $this->maxArgs) {
+                $args = array_merge($args, array_fill(0, $this->maxArgs - $nargs, ""));
+            }
+            try {
+                $ret = $this->run($args);
+            } catch (\Exception $e) {
+                Shell::$logger->error("Command raised Exception: " . (string) $e);
+            }
+        } else {
+            Shell::$logger->error("Wrong number of arguments to $command.");
+            Shell::$logger->info($this->usage());
         }
 
         return $ret;

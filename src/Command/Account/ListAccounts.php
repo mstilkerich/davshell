@@ -30,7 +30,7 @@ use MStilkerich\CardDavClient\Shell\{Shell,Command};
 /**
  * Command that lists all configured CardDAV accounts.
  */
-class ListAccounts extends Command
+final class ListAccounts extends Command
 {
     protected $synopsis = 'Lists the available accounts';
     protected $usage = 'Usage: acc:list';
@@ -42,6 +42,7 @@ class ListAccounts extends Command
      * @param list<string> $args Arguments for the function as command line tokens.
      * @return bool Indicates if the command was successful
      */
+    #[\Override]
     public function run(array $args): bool
     {
         $shell = Shell::instance();

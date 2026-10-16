@@ -31,7 +31,7 @@ use MStilkerich\CardDavClient\{Account, AddressbookCollection, Config, WebDavCol
 /**
  * Command to list available addressbooks.
  */
-class ListAddrBooks extends Command
+final class ListAddrBooks extends Command
 {
     protected $synopsis = 'Lists the available addressbooks';
     protected $usage = 'Usage: ab:list [<accountname>]';
@@ -46,6 +46,7 @@ class ListAddrBooks extends Command
      * @param list<string> $args Arguments for the function as command line tokens.
      * @return bool Indicates if the command was successful
      */
+    #[\Override]
     public function run(array $args): bool
     {
         $accountName = $args[0] ?? '';

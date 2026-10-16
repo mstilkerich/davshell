@@ -30,7 +30,7 @@ use MStilkerich\CardDavClient\Shell\{Shell,Command};
 /**
  * Command to dump the content of a WebDAV resource.
  */
-class DumpResource extends Command
+final class DumpResource extends Command
 {
     protected $synopsis = 'Dump content of a resource';
     protected $usage = 'Usage: cat <URI>';
@@ -43,6 +43,7 @@ class DumpResource extends Command
      * @param list<string> $args Arguments for the function as command line tokens.
      * @return bool Indicates if the command was successful
      */
+    #[\Override]
     public function run(array $args): bool
     {
         assert(count($args) >= 1);

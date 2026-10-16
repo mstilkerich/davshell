@@ -31,7 +31,7 @@ use MStilkerich\CardDavClient\{Account, AddressbookCollection, Config, WebDavCol
 /**
  * Command to perform a server-side addressbook search.
  */
-class Query extends Command
+final class Query extends Command
 {
     protected $synopsis = 'Queries an addressbook for cards matching criteria';
     protected $usage = 'Usage: ab:query <addressbook_id> <filter-condition>';
@@ -44,6 +44,7 @@ class Query extends Command
      * @param list<string> $args Arguments for the function as command line tokens.
      * @return bool Indicates if the command was successful
      */
+    #[\Override]
     public function run(array $args): bool
     {
         assert(count($args) >= 2);
@@ -61,8 +62,7 @@ class Query extends Command
             $cards = $abook->query([$prop => $filter], [ 'FN' ]);
 
             foreach ($cards as $card) {
-                $card = $card["vcard"];
-                $fn = $card->FN ?? "<no name>";
+                $fn = Shell::getCardProperty($card["vcard"], 'FN') ?? "<no name>";
                 Shell::$logger->info("Found: $fn");
             }
 

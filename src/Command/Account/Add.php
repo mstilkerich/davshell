@@ -31,7 +31,7 @@ use MStilkerich\CardDavClient\Account;
 /**
  * Command to add new accounts.
  */
-class Add extends Command
+final class Add extends Command
 {
     protected $synopsis = 'Adds an account';
     protected $usage = 'Usage: acc:add <name> <server> <username> <password>';
@@ -47,6 +47,7 @@ class Add extends Command
      * @param list<string> $args Arguments for the function as command line tokens.
      * @return bool Indicates if the command was successful
      */
+    #[\Override]
     public function run(array $args): bool
     {
         $ret = false;

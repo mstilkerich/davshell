@@ -32,7 +32,7 @@ use MStilkerich\CardDavClient\{Account, AddressbookCollection, Config, WebDavCol
 /**
  * Command to select the current working addressbook.
  */
-class Select extends Command
+final class Select extends Command
 {
     protected $synopsis = 'Change the currently selected working addressbook';
     protected $usage = 'Usage: chabook <addressbook_id>';
@@ -46,6 +46,7 @@ class Select extends Command
      * @param list<string> $args Arguments for the function as command line tokens.
      * @return bool Indicates if the command was successful
      */
+    #[\Override]
     public function run(array $args): bool
     {
         assert(count($args) >= 1);

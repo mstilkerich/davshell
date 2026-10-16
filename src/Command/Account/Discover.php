@@ -32,7 +32,7 @@ use MStilkerich\CardDavClient\{Account, AddressbookCollection, Config, WebDavCol
 /**
  * Abstract class for shell commands.
  */
-class Discover extends Command
+final class Discover extends Command
 {
     protected $synopsis = 'Discovers the available addressbooks in a specified CardDAV account';
     protected $usage = 'Usage: acc:discover <accountname>';
@@ -45,6 +45,7 @@ class Discover extends Command
      * @param list<string> $args Arguments for the function as command line tokens.
      * @return bool Indicates if the command was successful
      */
+    #[\Override]
     public function run(array $args): bool
     {
         $retval = false;

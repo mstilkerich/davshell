@@ -27,6 +27,8 @@ namespace MStilkerich\CardDavClient\Shell;
 
 use MStilkerich\CardDavClient\{Account, AddressbookCollection, Config, WebDavCollection};
 use Psr\Log\LoggerInterface;
+use Sabre\VObject\Component\VCard;
+use Sabre\VObject\Property;
 use Monolog\Logger;
 use Monolog\Level;
 use Monolog\Handler\StreamHandler;
@@ -67,7 +69,7 @@ use Bramus\Monolog\Formatter\ColoredLineFormatter;
  *   minargs: int,
  * }
  */
-class Shell
+final class Shell
 {
     private const CONFFILE = ".davshellrc";
     private const HISTFILE = ".davshell_history";
@@ -100,7 +102,6 @@ class Shell
     {
         $log = new Logger('davshell');
         $handler = new StreamHandler('php://stdout', 'DEBUG');
-        /** @psalm-suppress InvalidArgument See https://github.com/bramus/monolog-colored-line-formatter/pull/26 */
         $handler->setFormatter(new ColoredLineFormatter(
             null,
             "%message% %context% %extra%\n",
@@ -153,7 +154,7 @@ class Shell
                 $accAbooks["$name"] = [];
 
                 foreach ($abooks as $abook) {
-                    if (empty($abook["uri"])) {
+                    if (($abook["uri"] ?? "") === "") {
                         self::$logger->error("Config contains addressbook without URI");
                     } else {
                         $accAbooks[$name][] = new AddressbookCollection($abook["uri"], $account);
@@ -206,10 +207,10 @@ class Shell
         readline_read_history(self::HISTFILE);
 
         while ($cmd = readline($this->prompt())) {
-            $cmd = trim($cmd);
+            $cmd = trim($cmd, " \f\n\r\t\v\0");
             $tokens = preg_split("/\s+/", $cmd);
 
-            if (Command::execCommand($tokens)) {
+            if ($tokens !== false && Command::execCommand($tokens)) {
                 readline_add_history($cmd);
             }
         }
@@ -235,6 +236,20 @@ class Shell
         }
 
         return $abook;
+    }
+
+    /**
+     * Returns the value of a property of a VCard as string.
+     *
+     * If the VCard contains multiple instances of the property, the value of the first one is returned.
+     *
+     * @return ?string The property value, or null if the VCard does not contain the property.
+     */
+    public static function getCardProperty(VCard $card, string $propName): ?string
+    {
+        // explicit call of the magic getter, as psalm cannot infer the type of a dynamic property fetch
+        $prop = $card->__get($propName);
+        return ($prop instanceof Property) ? (string) $prop : null;
     }
 }
 

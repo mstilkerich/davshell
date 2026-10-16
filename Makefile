@@ -9,7 +9,7 @@ stylecheck:
 	vendor/bin/phpcs --colors --standard=PSR12 src/
 
 phpcompatcheck:
-	vendor/bin/phpcs --colors --standard=PHPCompatibility --runtime-set testVersion 7.1 src/
+	vendor/bin/phpcs --colors --standard=PHPCompatibility --runtime-set testVersion 8.2- src/
 
 psalmanalysis:
 	vendor/bin/psalm --no-cache --shepherd --report=testreports/psalm.txt --report-show-info=true --no-progress

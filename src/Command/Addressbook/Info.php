@@ -31,7 +31,7 @@ use MStilkerich\CardDavClient\{Account, AddressbookCollection, Config, WebDavCol
 /**
  * Command to list details of an addressbook.
  */
-class Info extends Command
+final class Info extends Command
 {
     protected $synopsis = 'Shows detailed information on the given addressbook.';
     protected $usage = 'Usage: ab:info [<addressbook_id>]';
@@ -43,6 +43,7 @@ class Info extends Command
      * @param list<string> $args Arguments for the function as command line tokens.
      * @return bool Indicates if the command was successful
      */
+    #[\Override]
     public function run(array $args): bool
     {
         $ret = false;

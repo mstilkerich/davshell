@@ -8,18 +8,18 @@ on:
 
 jobs:
   buildtest:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
 
     steps:
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.1'
+          php-version: '8.2'
           tools: composer:v2
           extensions: gd, xdebug, curl
           coverage: xdebug
       - name: Checkout davshell
-        uses: actions/checkout@v2
+        uses: actions/checkout@v7
       - name: Install dependencies
         run: composer update --no-interaction --no-progress
       - name: Check code style compliance with PSR12

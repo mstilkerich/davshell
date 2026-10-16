@@ -31,7 +31,7 @@ use MStilkerich\CardDavClient\{Account, AddressbookCollection, Config, WebDavCol
 /**
  * Command to list the members of a WebDAV collection.
  */
-class ListCollection extends Command
+final class ListCollection extends Command
 {
     protected $synopsis = 'List contents of a collection';
     protected $usage = 'Usage: ls [<URI>]';
@@ -45,6 +45,7 @@ class ListCollection extends Command
      * @param list<string> $args Arguments for the function as command line tokens.
      * @return bool Indicates if the command was successful
      */
+    #[\Override]
     public function run(array $args): bool
     {
         $uri = $args[0] ?? '';

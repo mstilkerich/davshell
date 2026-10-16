@@ -35,9 +35,9 @@ use MStilkerich\CardDavClient\AddressbookCollection;
 use MStilkerich\CardDavClient\Services\SyncHandler;
 
 /**
- * @psalm-type VCardInfo = array{uri: string, etag: string, vcard: ?VCard}
+ * @psalm-type VCardInfo = array{uri: string, etag: string, vcard: VCard}
  */
-class ShellSyncHandlerCollectChanges implements SyncHandler
+final class ShellSyncHandlerCollectChanges implements SyncHandler
 {
     /** @var array<string, VCardInfo> */
     private $changedCards = [];
@@ -45,6 +45,7 @@ class ShellSyncHandlerCollectChanges implements SyncHandler
     /** @var list<string> */
     private $deletedCards = [];
 
+    #[\Override]
     public function addressObjectChanged(string $uri, string $etag, ?VCard $card): void
     {
         if (!isset($card)) {
@@ -52,7 +53,7 @@ class ShellSyncHandlerCollectChanges implements SyncHandler
             return;
         }
 
-        $uid = (string) $card->UID;
+        $uid = Shell::getCardProperty($card, 'UID') ?? "";
         Shell::$logger->debug("Existing object: $uri ($uid)");
         $this->changedCards[$uid] = [
             'uri'   => $uri,
@@ -61,6 +62,7 @@ class ShellSyncHandlerCollectChanges implements SyncHandler
         ];
     }
 
+    #[\Override]
     public function addressObjectDeleted(string $uri): void
     {
         Shell::$logger->error("Deleted object: $uri not expected with this Sync Handler");
@@ -73,6 +75,7 @@ class ShellSyncHandlerCollectChanges implements SyncHandler
      *
      * @return array<string,string>
      */
+    #[\Override]
     public function getExistingVCardETags(): array
     {
         return [];
@@ -102,6 +105,7 @@ class ShellSyncHandlerCollectChanges implements SyncHandler
         return $this->deletedCards;
     }
 
+    #[\Override]
     public function finalizeSync(): void
     {
     }

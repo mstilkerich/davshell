@@ -32,7 +32,7 @@ use MStilkerich\CardDavClient\{Account, AddressbookCollection, Config, WebDavCol
 /**
  * Command to delete all cards in an addressbook.
  */
-class Sweep extends Command
+final class Sweep extends Command
 {
     protected $synopsis = 'Deletes all address objects of the given addressbook';
     protected $usage = 'Usage: ab:sweep <addressbook_id>';
@@ -44,6 +44,7 @@ class Sweep extends Command
      * @param list<string> $args Arguments for the function as command line tokens.
      * @return bool Indicates if the command was successful
      */
+    #[\Override]
     public function run(array $args): bool
     {
         assert(count($args) >= 1);

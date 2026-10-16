@@ -33,7 +33,7 @@ use Sabre\VObject\Component\VCard;
 use MStilkerich\CardDavClient\AddressbookCollection;
 use MStilkerich\CardDavClient\Services\SyncHandler;
 
-class ShellSyncHandlerClone implements SyncHandler
+final class ShellSyncHandlerClone implements SyncHandler
 {
     /** @var AddressbookCollection */
     private $destAbook;
@@ -56,6 +56,7 @@ class ShellSyncHandlerClone implements SyncHandler
         $this->newOnly = $newOnly;
     }
 
+    #[\Override]
     public function addressObjectChanged(string $uri, string $etag, ?VCard $card): void
     {
         if (!isset($card)) {
@@ -63,12 +64,12 @@ class ShellSyncHandlerClone implements SyncHandler
             return;
         }
 
-        $uid = (string) $card->UID;
+        $uid = Shell::getCardProperty($card, 'UID') ?? "";
 
         $existingCard = $this->destState->getCardByUID($uid);
 
         if (isset($existingCard)) {
-            $fn = $existingCard["vcard"]->FN ?? "<no name>";
+            $fn = Shell::getCardProperty($existingCard["vcard"], 'FN') ?? "<no name>";
 
             if ($this->newOnly) {
                 Shell::$logger->debug("Skip existing card: $uid ($fn)");
@@ -79,21 +80,24 @@ class ShellSyncHandlerClone implements SyncHandler
         } else {
             [ "uri" => $newuri ] = $this->destAbook->createCard($card);
 
-            $fn = $card->FN ?? "<no name>";
+            $fn = Shell::getCardProperty($card, 'FN') ?? "<no name>";
             Shell::$logger->debug("Cloned object: $uri ($fn) to $newuri");
         }
     }
 
+    #[\Override]
     public function addressObjectDeleted(string $uri): void
     {
         Shell::$logger->error("Deleted object: $uri not expected during clone");
     }
 
+    #[\Override]
     public function getExistingVCardETags(): array
     {
         return [];
     }
 
+    #[\Override]
     public function finalizeSync(): void
     {
     }

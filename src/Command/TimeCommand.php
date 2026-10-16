@@ -31,7 +31,7 @@ use MStilkerich\CardDavClient\{Account, AddressbookCollection, Config, WebDavCol
 /**
  * Executes a command measuring the time it takes executing.
  */
-class TimeCommand extends Command
+final class TimeCommand extends Command
 {
     protected $synopsis = 'Measures and outputs the time taken by the following command';
     protected $usage = 'Usage: time <command> [<command_args>]';
@@ -43,6 +43,7 @@ class TimeCommand extends Command
      * @param list<string> $args Arguments for the function as command line tokens.
      * @return bool Indicates if the command was successful
      */
+    #[\Override]
     public function run(array $args): bool
     {
         $ret = false;

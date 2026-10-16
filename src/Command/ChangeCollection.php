@@ -31,7 +31,7 @@ use MStilkerich\CardDavClient\{WebDavCollection, WebDavResource};
 /**
  * Command changes the currently selected collection of the shell.
  */
-class ChangeCollection extends Command
+final class ChangeCollection extends Command
 {
     protected $synopsis = 'Change the current working collection';
     protected $usage = 'Usage: cd [<URI>]';
@@ -45,6 +45,7 @@ class ChangeCollection extends Command
      * @param list<string> $args Arguments for the function as command line tokens.
      * @return bool Indicates if the command was successful
      */
+    #[\Override]
     public function run(array $args): bool
     {
         $uri = $args[0] ?? '';

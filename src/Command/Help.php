@@ -31,7 +31,7 @@ use MStilkerich\CardDavClient\{Account, AddressbookCollection, Config, WebDavCol
 /**
  * Command to list available commands or print help on specific command.
  */
-class Help extends Command
+final class Help extends Command
 {
     protected $synopsis = 'Lists available commands or displays help on a specific command';
     protected $usage = 'Usage: help [<command>]';
@@ -44,6 +44,7 @@ class Help extends Command
      * @param list<string> $args Arguments for the function as command line tokens.
      * @return bool Indicates if the command was successful
      */
+    #[\Override]
     public function run(array $args): bool
     {
         $ret = false;

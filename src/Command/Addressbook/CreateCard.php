@@ -33,7 +33,7 @@ use MStilkerich\CardDavClient\{Account, AddressbookCollection, Config, WebDavCol
 /**
  * Command to create a VCard in an addressbook from a local file.
  */
-class CreateCard extends Command
+final class CreateCard extends Command
 {
     protected $synopsis = 'Create an address object from a local vcard';
     protected $usage = 'Usage: ab:putcard <filename> [<addressbook_id>]';
@@ -47,6 +47,7 @@ class CreateCard extends Command
      * @param list<string> $args Arguments for the function as command line tokens.
      * @return bool Indicates if the command was successful
      */
+    #[\Override]
     public function run(array $args): bool
     {
         assert(count($args) >= 1);
@@ -69,7 +70,14 @@ class CreateCard extends Command
         }
 
         try {
-            $vcard = VObject\Reader::read(fopen($filename, 'r'));
+            $fh = fopen($filename, 'r');
+            if ($fh === false) {
+                Shell::$logger->error("Could not open $filename");
+                return false;
+            }
+
+            $vcard = VObject\Reader::read($fh);
+            fclose($fh);
             if (!($vcard instanceof VCard)) {
                 Shell::$logger->error("Could not read VCard from $filename");
                 return false;

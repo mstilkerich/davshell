@@ -31,7 +31,7 @@ use MStilkerich\CardDavClient\Shell\{Shell,Command,ShellSyncHandlerCollectChange
 /**
  * Command to clone one addressbook's content into another addressbook.
  */
-class CloneAddrBook extends Command
+final class CloneAddrBook extends Command
 {
     protected $synopsis = 'Clones an addressbook to another addressbok';
     protected $usage = 'Usage: ab:clone <source_addressbook_id> <target_addressbook_id> [-n]';
@@ -47,6 +47,7 @@ class CloneAddrBook extends Command
      * @param list<string> $args Arguments for the function as command line tokens.
      * @return bool Indicates if the command was successful
      */
+    #[\Override]
     public function run(array $args): bool
     {
         assert(count($args) >= 2);

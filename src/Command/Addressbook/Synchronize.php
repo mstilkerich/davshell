@@ -31,7 +31,7 @@ use MStilkerich\CardDavClient\Services\Sync;
 /**
  * Command to synchronize the contents of an addressbook (dumps names to console).
  */
-class Synchronize extends Command
+final class Synchronize extends Command
 {
     protected $synopsis = 'Synchronizes an addressbook to the local cache.';
     protected $usage = 'Usage: ab:sync <addressbook_id> [<sync-token>]';
@@ -44,6 +44,7 @@ class Synchronize extends Command
      * @param list<string> $args Arguments for the function as command line tokens.
      * @return bool Indicates if the command was successful
      */
+    #[\Override]
     public function run(array $args): bool
     {
         assert(count($args) >= 1);
@@ -58,7 +59,7 @@ class Synchronize extends Command
             $synctoken = $syncmgr->synchronize($abook, $synchandler, [ ], $syncToken);
 
             foreach ($synchandler->getChangedCards() as $card) {
-                $fn = $card["vcard"]->FN ?? "<no name>";
+                $fn = Shell::getCardProperty($card["vcard"], 'FN') ?? "<no name>";
                 Shell::$logger->info("Changed object: {$card["uri"]} ($fn)");
             }
 
