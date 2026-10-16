@@ -26,7 +26,7 @@ declare(strict_types=1);
 namespace MStilkerich\CardDavClient\Shell\Command\Addressbook;
 
 use MStilkerich\CardDavClient\Services\Sync;
-use MStilkerich\CardDavClient\Shell\{Shell,Command,ShellSyncHandlerCollectChanges,ShellSyncHandlerClone};
+use MStilkerich\CardDavClient\Shell\{Shell,Command,ShellSyncHandlerCollectChanges,ShellSyncHandlerClone,ArgType};
 
 /**
  * Command to clone one addressbook's content into another addressbook.
@@ -42,6 +42,7 @@ final class CloneAddrBook extends Command
         . "Option -n: Only add cards not existing in destination yet, leave the rest alone.";
     protected $minArgs = 2;
     protected $maxArgs = 3;
+    protected $argTypes = [ ArgType::Addressbook, ArgType::Addressbook ];
 
     /**
      * @param list<string> $args Arguments for the function as command line tokens.

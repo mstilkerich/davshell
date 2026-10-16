@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 namespace MStilkerich\CardDavClient\Shell\Command\Addressbook;
 
-use MStilkerich\CardDavClient\Shell\{Shell,Command};
+use MStilkerich\CardDavClient\Shell\{Shell,Command,ArgType};
 use MStilkerich\CardDavClient\{Account, AddressbookCollection, Config, WebDavCollection, WebDavResource};
 
 /**
@@ -38,6 +38,7 @@ final class Info extends Command
     protected $help = "addressbook_id: Identifier of the addressbook as provided by the \"addressbooks\" command.";
     protected $minArgs = 0;
     protected $maxArgs = 1;
+    protected $argTypes = [ ArgType::Addressbook ];
 
     /**
      * @param list<string> $args Arguments for the function as command line tokens.

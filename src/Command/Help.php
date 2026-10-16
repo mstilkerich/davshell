@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 namespace MStilkerich\CardDavClient\Shell\Command;
 
-use MStilkerich\CardDavClient\Shell\{Shell,Command};
+use MStilkerich\CardDavClient\Shell\{Shell,Command,ArgType};
 use MStilkerich\CardDavClient\{Account, AddressbookCollection, Config, WebDavCollection, WebDavResource};
 
 /**
@@ -39,6 +39,7 @@ final class Help extends Command
         . "otherwise prints help on the specified command.";
     protected $minArgs = 0;
     protected $maxArgs = 1;
+    protected $argTypes = [ ArgType::Command ];
 
     /**
      * @param list<string> $args Arguments for the function as command line tokens.

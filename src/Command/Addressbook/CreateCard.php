@@ -27,7 +27,7 @@ namespace MStilkerich\CardDavClient\Shell\Command\Addressbook;
 
 use Sabre\VObject;
 use Sabre\VObject\Component\VCard;
-use MStilkerich\CardDavClient\Shell\{Shell,Command};
+use MStilkerich\CardDavClient\Shell\{Shell,Command,ArgType};
 use MStilkerich\CardDavClient\{Account, AddressbookCollection, Config, WebDavCollection, WebDavResource};
 
 /**
@@ -42,6 +42,7 @@ final class CreateCard extends Command
         . "addressbook_id: Identifier of the addressbook as provided by the \"addressbooks\" command.";
     protected $minArgs = 1;
     protected $maxArgs = 2;
+    protected $argTypes = [ ArgType::File, ArgType::Addressbook ];
 
     /**
      * @param list<string> $args Arguments for the function as command line tokens.

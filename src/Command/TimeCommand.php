@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 namespace MStilkerich\CardDavClient\Shell\Command;
 
-use MStilkerich\CardDavClient\Shell\{Shell,Command};
+use MStilkerich\CardDavClient\Shell\{Shell,Command,ArgType};
 use MStilkerich\CardDavClient\{Account, AddressbookCollection, Config, WebDavCollection, WebDavResource};
 
 /**
@@ -38,6 +38,7 @@ final class TimeCommand extends Command
     protected $help = "";
     protected $minArgs = 2;
     protected $maxArgs = -1;
+    protected $argTypes = [ ArgType::CommandLine ];
 
     /**
      * @param list<string> $args Arguments for the function as command line tokens.

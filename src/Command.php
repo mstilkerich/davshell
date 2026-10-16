@@ -69,6 +69,9 @@ abstract class Command
     /** @var int */
     protected $maxArgs;
 
+    /** @var list<ArgType> Types of the positional arguments, used for tab completion */
+    protected $argTypes = [];
+
     protected function usage(): string
     {
         return $this->usage;
@@ -85,6 +88,33 @@ abstract class Command
     }
 
     /**
+     * @return list<ArgType> Types of the positional arguments of the command.
+     */
+    public function argTypes(): array
+    {
+        return $this->argTypes;
+    }
+
+    /**
+     * @return list<string> The names of all available commands.
+     */
+    public static function commandNames(): array
+    {
+        return array_keys(self::COMMAND_MAP);
+    }
+
+    /**
+     * Creates an instance of the command with the given name.
+     *
+     * @return ?Command The command object, or null if no command of the given name exists.
+     */
+    public static function forName(string $command): ?Command
+    {
+        $cmdClass = self::COMMAND_MAP[$command] ?? null;
+        return isset($cmdClass) ? new $cmdClass() : null;
+    }
+
+    /**
      * @param list<string> $args Arguments for the function as command line tokens.
      * @return bool Indicates if the command was successful
      */
@@ -98,9 +128,8 @@ abstract class Command
         $ret = false;
         $command = array_shift($tokens);
 
-        if (isset(self::COMMAND_MAP[$command])) {
-            $cmdClass = self::COMMAND_MAP[$command];
-            $cmd = new $cmdClass();
+        $cmd = self::forName($command);
+        if (isset($cmd)) {
             $ret = $cmd->checkArgsAndRun($command, $tokens);
         } else {
             Shell::$logger->error("Unknown command $command. Type \"help\" for a list of available commands");

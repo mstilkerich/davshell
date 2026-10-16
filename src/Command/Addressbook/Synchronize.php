@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 namespace MStilkerich\CardDavClient\Shell\Command\Addressbook;
 
-use MStilkerich\CardDavClient\Shell\{Shell,Command,ShellSyncHandlerCollectChanges};
+use MStilkerich\CardDavClient\Shell\{Shell,Command,ShellSyncHandlerCollectChanges,ArgType};
 use MStilkerich\CardDavClient\Services\Sync;
 
 /**
@@ -39,6 +39,7 @@ final class Synchronize extends Command
         . "sync-token: Synchronization token that identifies the base state of the synchronization.";
     protected $minArgs = 1;
     protected $maxArgs = 2;
+    protected $argTypes = [ ArgType::Addressbook ];
 
     /**
      * @param list<string> $args Arguments for the function as command line tokens.

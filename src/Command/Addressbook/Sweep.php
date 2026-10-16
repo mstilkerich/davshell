@@ -26,7 +26,7 @@ declare(strict_types=1);
 namespace MStilkerich\CardDavClient\Shell\Command\Addressbook;
 
 use MStilkerich\CardDavClient\Services\Sync;
-use MStilkerich\CardDavClient\Shell\{Shell,Command,ShellSyncHandlerCollectChanges};
+use MStilkerich\CardDavClient\Shell\{Shell,Command,ShellSyncHandlerCollectChanges,ArgType};
 use MStilkerich\CardDavClient\{Account, AddressbookCollection, Config, WebDavCollection, WebDavResource};
 
 /**
@@ -39,6 +39,7 @@ final class Sweep extends Command
     protected $help = "addressbook_id: Identifier of the addressbook as provided by the \"addressbooks\" command.";
     protected $minArgs = 1;
     protected $maxArgs = 1;
+    protected $argTypes = [ ArgType::Addressbook ];
 
     /**
      * @param list<string> $args Arguments for the function as command line tokens.

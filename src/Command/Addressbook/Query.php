@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 namespace MStilkerich\CardDavClient\Shell\Command\Addressbook;
 
-use MStilkerich\CardDavClient\Shell\{Shell,Command};
+use MStilkerich\CardDavClient\Shell\{Shell,Command,ArgType};
 use MStilkerich\CardDavClient\{Account, AddressbookCollection, Config, WebDavCollection, WebDavResource};
 
 /**
@@ -39,6 +39,7 @@ final class Query extends Command
         . "<filter-condition>: A filter of the form [!]PROPERTY:[SEARCHPATTERN]";
     protected $minArgs = 2;
     protected $maxArgs = 2;
+    protected $argTypes = [ ArgType::Addressbook ];
 
     /**
      * @param list<string> $args Arguments for the function as command line tokens.

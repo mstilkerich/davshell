@@ -38,7 +38,7 @@ use Bramus\Monolog\Formatter\ColoredLineFormatter;
 /**
  * Simple CardDAV Shell, mainly for debugging the library.
  *
- * @psalm-type AccountName string
+ * @psalm-type AccountName = string
  *
  * @psalm-type ShellConfig = array{
  *   accounts: array<AccountName, Account>,
@@ -205,6 +205,7 @@ final class Shell
     public function run(): void
     {
         readline_read_history(self::HISTFILE);
+        readline_completion_function(Completer::complete(...));
 
         while ($cmd = readline($this->prompt())) {
             $cmd = trim($cmd, " \f\n\r\t\v\0");

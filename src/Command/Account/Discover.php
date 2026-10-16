@@ -26,7 +26,7 @@ declare(strict_types=1);
 namespace MStilkerich\CardDavClient\Shell\Command\Account;
 
 use MStilkerich\CardDavClient\Services\Discovery;
-use MStilkerich\CardDavClient\Shell\{Shell,Command};
+use MStilkerich\CardDavClient\Shell\{Shell,Command,ArgType};
 use MStilkerich\CardDavClient\{Account, AddressbookCollection, Config, WebDavCollection, WebDavResource};
 
 /**
@@ -40,6 +40,7 @@ final class Discover extends Command
         . "described by RFC6764 (DNS SRV/TXT lookups, /.well-known URI lookup, plus default locations).";
     protected $minArgs = 1;
     protected $maxArgs = 1;
+    protected $argTypes = [ ArgType::Account ];
 
     /**
      * @param list<string> $args Arguments for the function as command line tokens.
