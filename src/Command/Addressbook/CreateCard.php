@@ -3,7 +3,7 @@
 /*
  * davshell - Simple Shell to interact with (Card)DAV servers
  *
- * Copyright (C) 2020 Michael Stilkerich <ms@mike2k.de>
+ * Copyright (C) 2020-2026 Michael Stilkerich <ms@mike2k.de>
  *
  * This file is part of davshell.
  *
