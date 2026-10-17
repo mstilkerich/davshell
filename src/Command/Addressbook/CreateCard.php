@@ -38,7 +38,7 @@ final class CreateCard extends Command
     protected $synopsis = 'Create an address object from a local vcard';
     protected $usage = 'Usage: ab:putcard <filename> [<addressbook_id>]';
     protected $help = "Creates a new resource from a local file in the given or current addressbook.\n"
-        . "filename: Absolute or relative to the current working directory."
+        . "filename: Absolute or relative to the current working directory.\n"
         . "addressbook_id: Identifier of the addressbook as provided by the \"addressbooks\" command.";
     protected $minArgs = 1;
     protected $maxArgs = 2;
