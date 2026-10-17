@@ -34,11 +34,13 @@ use MStilkerich\CardDavClient\Services\Sync;
 final class Synchronize extends Command
 {
     protected $synopsis = 'Synchronizes an addressbook to the local cache.';
-    protected $usage = 'Usage: ab:sync <addressbook_id> [<sync-token>]';
+    protected $usage = 'Usage: ab:sync <addressbook_id> [<sync-token> [<limit>]]';
     protected $help = "addressbook_id: Identifier of the addressbook as provided by the \"addressbooks\" command.\n"
-        . "sync-token: Synchronization token that identifies the base state of the synchronization.";
+        . "sync-token: Synchronization token that identifies the base state of the synchronization.\n"
+        . "  Omit or use \"-\" to perform a full sync.\n"
+        . "limit: If greater than 0, retrieve the changes from the server in batches of at most this many changes.";
     protected $minArgs = 1;
-    protected $maxArgs = 2;
+    protected $maxArgs = 3;
     protected $argTypes = [ ArgType::Addressbook ];
 
     /**
@@ -49,7 +51,19 @@ final class Synchronize extends Command
     public function run(array $args): bool
     {
         assert(count($args) >= 1);
-        [ $abookId, $syncToken ] = $args;
+        [ $abookId, $syncToken, $limitArg ] = $args;
+        if ($syncToken === "-") {
+            $syncToken = "";
+        }
+        if ($limitArg === "") {
+            $limitArg = "0";
+        }
+
+        if (!ctype_digit($limitArg)) {
+            Shell::$logger->error("Invalid limit: $limitArg (must be a non-negative integer)");
+            return false;
+        }
+        $limit = intval($limitArg);
         $shell = Shell::instance();
         $ret = false;
 
@@ -57,7 +71,7 @@ final class Synchronize extends Command
         if (isset($abook)) {
             $synchandler = new ShellSyncHandlerCollectChanges();
             $syncmgr = new Sync();
-            $synctoken = $syncmgr->synchronize($abook, $synchandler, [ ], $syncToken);
+            $synctoken = $syncmgr->synchronize($abook, $synchandler, [ ], $syncToken, $limit);
 
             foreach ($synchandler->getChangedCards() as $card) {
                 $fn = Shell::getCardProperty($card["vcard"], 'FN') ?? "<no name>";
